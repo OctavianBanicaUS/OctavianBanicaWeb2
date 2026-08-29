@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../home/oai/assets/favicon.svg">
+<title>The reconciliation layer earns its keep — Octavian Banica</title>
+<meta name="description" content="A validation framework isn&#x27;t a tax on a performance redesign — on the benchmark system, it&#x27;s what made the aggressive part of the redesign possible.">
+<link rel="canonical" href="https://octavianbanica.com/notes/reconciliation-earns-its-keep/">
+<meta property="og:type" content="article"><meta property="og:title" content="The reconciliation layer earns its keep — Octavian Banica">
+<meta property="og:description" content="A validation framework isn&#x27;t a tax on a performance redesign — on the benchmark system, it&#x27;s what made the aggressive part of the redesign possible."><meta property="og:url" content="https://octavianbanica.com/notes/reconciliation-earns-its-keep/">
+<meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg"><meta property="og:site_name" content="Octavian Banica">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="The reconciliation layer earns its keep — Octavian Banica"><meta name="twitter:description" content="A validation framework isn&#x27;t a tax on a performance redesign — on the benchmark system, it&#x27;s what made the aggressive part of the redesign possible."><meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg">
+
+<link rel="stylesheet" href="../../home/oai/css/site.css"></head><body>
+<a href="#main" class="skip-link">Skip to content</a><header class="site-header">
+  <div class="bar container-wide">
+    <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav">
+      <span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary"><ul><li><a href="../../work">Selected Work</a></li><li><a href=".." aria-current="page">Systems Notes</a></li><li><a href="../../career">Career</a></li><li><a href="../../about">About</a></li><li><a href="../../now">Now</a></li><li><a href="../../contact">Contact</a></li></ul></nav>
+  </div>
+</header>
+<main id="main"><article class="container story"><p class="eyebrow"><a href=".." class="back-link">Systems Notes</a></p>
+<time class="meta-row" datetime="2026-08-17T00:00:00.000Z">August 2026</time>
+<h1>The reconciliation layer earns its keep</h1><p class="lede">A validation framework isn&#x27;t a tax on a performance redesign — on the benchmark system, it&#x27;s what made the aggressive part of the redesign possible.</p>
+<ul class="tag-list" aria-label="Topics"><li>validation</li><li>financial systems</li><li>reliability</li></ul>
+<div class="prose"><p>There's a common instinct to treat a validation and reconciliation layer as overhead: something you bolt on after the real engineering is done, to satisfy a compliance checklist or catch the occasional edge case. On the <a href="../../work/benchmark-system">fixed-income benchmark calculation redesign</a>, it was closer to the opposite. The reconciliation framework is what made it possible to be aggressive with the performance work at all.</p>
+<p>The reasoning is simple once you see it: if the only thing standing between a calculation bug and production is careful code review, you have to be conservative about how much you change at once. Every optimization is a new opportunity for a subtle numerical or logical error to slip through, and in a system whose output other financial software trusts directly, "subtle and wrong" is a much worse failure mode than "slow."</p>
+<p>An independent reconciliation layer changes the calculus. It doesn't know or care how the calculation engine is implemented internally — it just checks whether the output is consistent with what's expected. That decoupling means the calculation engine is free to change dramatically, because there's a second, independent system watching for the class of error that matters most: correctness regressions that a human reviewer might miss.</p>
+<p>In practice, that framework caught the kind of discrepancy that's easy to introduce during a large redesign and easy to miss in review — and it did that continuously, in production, not just at release time. The result was a system that could ship more aggressive latency improvements <em>because</em> the safety net existed, not despite the extra engineering effort it took to build it.</p>
+<p>The general version of the lesson: if you want permission to change a system's internals significantly, invest in an independent way to verify its output first. The verification layer isn't the cautious option — it's what makes the ambitious option safe enough to ship.</p></div></article></main><footer class="site-footer"><div class="container-wide footer-grid">
+<div><p class="footer-name">Octavian Banica</p><p class="footer-tag">Systems engineering — distributed, real-time, financial.</p></div>
+<ul class="footer-links"><li><a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a></li><li><a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a></li><li><a href="../../contact">Get in touch</a></li></ul>
+<p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
+</div></footer>
+<script src="../../home/oai/js/site.js" defer></script></body></html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../home/oai/assets/favicon.svg">
+<title>Breaking up the Yield &amp; Spread monolith — Octavian Banica</title>
+<meta name="description" content="Decomposing Bloomberg&#x27;s global Yield &amp; Spread analytics system into distributed microservices so it could analyze whole portfolios, not just single securities.">
+<link rel="canonical" href="https://octavianbanica.com/work/yas-microservices/">
+<meta property="og:type" content="article"><meta property="og:title" content="Breaking up the Yield &amp; Spread monolith — Octavian Banica">
+<meta property="og:description" content="Decomposing Bloomberg&#x27;s global Yield &amp; Spread analytics system into distributed microservices so it could analyze whole portfolios, not just single securities."><meta property="og:url" content="https://octavianbanica.com/work/yas-microservices/">
+<meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg"><meta property="og:site_name" content="Octavian Banica">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Breaking up the Yield &amp; Spread monolith — Octavian Banica"><meta name="twitter:description" content="Decomposing Bloomberg&#x27;s global Yield &amp; Spread analytics system into distributed microservices so it could analyze whole portfolios, not just single securities."><meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg">
+<meta name="article:section" content="Bloomberg">
+<link rel="stylesheet" href="../../home/oai/css/site.css"></head><body>
+<a href="#main" class="skip-link">Skip to content</a><header class="site-header">
+  <div class="bar container-wide">
+    <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav">
+      <span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary"><ul><li><a href=".." aria-current="page">Selected Work</a></li><li><a href="../../notes">Systems Notes</a></li><li><a href="../../career">Career</a></li><li><a href="../../about">About</a></li><li><a href="../../now">Now</a></li><li><a href="../../contact">Contact</a></li></ul></nav>
+  </div>
+</header>
+<main id="main"><article class="container story"><p class="eyebrow"><a href=".." class="back-link">Selected Work</a></p>
+<div class="meta-row"><span>Bloomberg</span><span aria-hidden="true">·</span><span>2015 – 2026</span></div>
+<h1>Breaking up the Yield &amp; Spread monolith</h1><p class="lede">Decomposing Bloomberg&#x27;s global Yield &amp; Spread analytics system into distributed microservices so it could analyze whole portfolios, not just single securities.</p>
+<ul class="tag-list" aria-label="Technologies involved"><li>C++</li><li>distributed systems</li><li>service architecture</li><li>data contracts</li></ul>
+<div class="prose"><h2>The problem</h2>
+<p>Yield &amp; Spread (YAS) is Bloomberg's fixed-income analytics system, used globally to analyze how bonds yield relative to benchmarks. It was built to analyze securities one at a time. The redesign requirement was to make it work across a portfolio of securities — which is a different computational shape, not just "more of the same load."</p>
+<p>A monolith that was tuned for single-security analysis doesn't scale gracefully into portfolio analysis; the parts of the system that made sense as one tightly coupled unit become the parts that block you.</p>
+<h2>Constraints</h2>
+<ul>
+<li><strong>A live, globally-used system.</strong> YAS couldn't go offline for a redesign; the decomposition had to happen in a way that let old and new pieces coexist during the transition.</li>
+<li><strong>Correctness had to survive the split.</strong> Once a monolith's internal logic is spread across services, it becomes much easier to introduce subtle inconsistencies between what each service assumes about the data it receives.</li>
+<li><strong>Independent deployability mattered.</strong> Part of the point of decomposing the system was so different pieces could be built, tested, and deployed on their own schedules — that only works if the boundaries between them are drawn correctly the first time.</li>
+</ul>
+<h2>The decisions</h2>
+<p>I led the decomposition of the monolithic analytics system into distributed microservices — which meant defining the service boundaries, the data contracts between them, and the deployment architecture, before writing the parallelized computation that the redesign actually needed. Getting the boundaries wrong would have made every subsequent optimization harder, so that came first.</p>
+<div class="flow" role="img" aria-label="Before: one monolithic YAS service. After: decomposed services with defined data contracts and parallelized computation">
+  <span class="flow-step">monolithic YAS</span>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <span class="flow-step is-accent">service boundaries + data contracts</span>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <span class="flow-step is-accent">parallelized computation</span>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <span class="flow-step">portfolio-level analytics</span>
+</div>
+<h2>The trade-off</h2>
+<p>Distributed services are harder to reason about than a monolith — you trade a single mental model for the ability to scale, test, and deploy pieces independently. That trade only pays off if the data contracts between services are precise enough that teams can build against them without re-checking each other's assumptions constantly. Defining those contracts explicitly, rather than letting them emerge implicitly the way they had inside the monolith, was the part of this project with the most long-term leverage.</p>
+<h2>Impact</h2>
+<p>The decomposition, plus the parallelized computation and optimized data flow it enabled, delivered a 25% reduction in latency — while turning a single-security tool into one that supports portfolio-level fixed-income analysis, with services that can be tested and deployed independently of one another.</p></div></article></main><footer class="site-footer"><div class="container-wide footer-grid">
+<div><p class="footer-name">Octavian Banica</p><p class="footer-tag">Systems engineering — distributed, real-time, financial.</p></div>
+<ul class="footer-links"><li><a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a></li><li><a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a></li><li><a href="../../contact">Get in touch</a></li></ul>
+<p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
+</div></footer>
+<script src="../../home/oai/js/site.js" defer></script></body></html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../home/oai/assets/favicon.svg">
+<title>Draw the boundaries before you parallelize — Octavian Banica</title>
+<meta name="description" content="Decomposing a monolith into services and parallelizing its computation look like one project. Doing them in the wrong order makes the second one much harder.">
+<link rel="canonical" href="https://octavianbanica.com/notes/boundaries-before-parallelism/">
+<meta property="og:type" content="article"><meta property="og:title" content="Draw the boundaries before you parallelize — Octavian Banica">
+<meta property="og:description" content="Decomposing a monolith into services and parallelizing its computation look like one project. Doing them in the wrong order makes the second one much harder."><meta property="og:url" content="https://octavianbanica.com/notes/boundaries-before-parallelism/">
+<meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg"><meta property="og:site_name" content="Octavian Banica">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Draw the boundaries before you parallelize — Octavian Banica"><meta name="twitter:description" content="Decomposing a monolith into services and parallelizing its computation look like one project. Doing them in the wrong order makes the second one much harder."><meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg">
+
+<link rel="stylesheet" href="../../home/oai/css/site.css"></head><body>
+<a href="#main" class="skip-link">Skip to content</a><header class="site-header">
+  <div class="bar container-wide">
+    <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav">
+      <span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary"><ul><li><a href="../../work">Selected Work</a></li><li><a href=".." aria-current="page">Systems Notes</a></li><li><a href="../../career">Career</a></li><li><a href="../../about">About</a></li><li><a href="../../now">Now</a></li><li><a href="../../contact">Contact</a></li></ul></nav>
+  </div>
+</header>
+<main id="main"><article class="container story"><p class="eyebrow"><a href=".." class="back-link">Systems Notes</a></p>
+<time class="meta-row" datetime="2026-08-17T00:00:00.000Z">August 2026</time>
+<h1>Draw the boundaries before you parallelize</h1><p class="lede">Decomposing a monolith into services and parallelizing its computation look like one project. Doing them in the wrong order makes the second one much harder.</p>
+<ul class="tag-list" aria-label="Topics"><li>distributed systems</li><li>architecture</li><li>data contracts</li></ul>
+<div class="prose"><p>When <a href="../../work/yas-microservices">Yield &amp; Spread moved from analyzing single securities to analyzing whole portfolios</a>, the obvious-sounding plan is: break the monolith into services, then parallelize the computation across them, and the latency wins should follow from both. In practice, the order those two things happen in matters more than it looks like it should.</p>
+<p>Parallelizing computation inside a system whose internal boundaries are still fuzzy just distributes the fuzziness. If two components are informally sharing assumptions about data shape, ordering, or state — the way pieces of a monolith often do without anyone deciding to design it that way — splitting them across services and running them concurrently doesn't remove those assumptions. It just makes them harder to find, because now they're implicit contracts between processes instead of implicit contracts between function calls in the same stack trace.</p>
+<p>So the decomposition work that actually mattered wasn't the parallel computation itself — it was defining the service boundaries and the data contracts between them <em>before</em> writing the code that would run them in parallel. A precise contract is what lets a service be optimized, scaled, or reasoned about independently, because you've made explicit what used to be an assumption. Skip that step, and "distributed" mostly just means "the same coupling, now with network calls."</p>
+<p>The pattern generalizes past this one system: parallelism is a multiplier. It amplifies whatever correctness properties your boundaries already have — including their absence. Get the contracts right first, and the performance work becomes comparatively mechanical. Get them wrong, and every latency win comes with a matching increase in how hard the system is to debug.</p></div></article></main><footer class="site-footer"><div class="container-wide footer-grid">
+<div><p class="footer-name">Octavian Banica</p><p class="footer-tag">Systems engineering — distributed, real-time, financial.</p></div>
+<ul class="footer-links"><li><a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a></li><li><a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a></li><li><a href="../../contact">Get in touch</a></li></ul>
+<p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
+</div></footer>
+<script src="../../home/oai/js/site.js" defer></script></body></html>

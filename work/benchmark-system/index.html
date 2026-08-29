@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../../home/oai/assets/favicon.svg">
+<title>Redesigning Bloomberg&#x27;s fixed-income benchmark calculation system — Octavian Banica</title>
+<meta name="description" content="A from-scratch redesign of the engine that calculates the fixed-income benchmarks across Bloomberg&#x27;s ecosystem, the project I&#x27;m proudest of, and one I designed end to end.">
+<link rel="canonical" href="https://octavianbanica.com/work/benchmark-system/">
+<meta property="og:type" content="article"><meta property="og:title" content="Redesigning Bloomberg&#x27;s fixed-income benchmark calculation system — Octavian Banica">
+<meta property="og:description" content="A from-scratch redesign of the engine that calculates the fixed-income benchmarks across Bloomberg&#x27;s ecosystem, the project I&#x27;m proudest of, and one I designed end to end."><meta property="og:url" content="https://octavianbanica.com/work/benchmark-system/">
+<meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg"><meta property="og:site_name" content="Octavian Banica">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Redesigning Bloomberg&#x27;s fixed-income benchmark calculation system — Octavian Banica"><meta name="twitter:description" content="A from-scratch redesign of the engine that calculates the fixed-income benchmarks across Bloomberg&#x27;s ecosystem, the project I&#x27;m proudest of, and one I designed end to end."><meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg">
+<meta name="article:section" content="Bloomberg">
+<link rel="stylesheet" href="../../home/oai/css/site.css"></head><body>
+<a href="#main" class="skip-link">Skip to content</a><header class="site-header">
+  <div class="bar container-wide">
+    <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav">
+      <span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary"><ul><li><a href=".." aria-current="page">Selected Work</a></li><li><a href="../../notes">Systems Notes</a></li><li><a href="../../career">Career</a></li><li><a href="../../about">About</a></li><li><a href="../../now">Now</a></li><li><a href="../../contact">Contact</a></li></ul></nav>
+  </div>
+</header>
+<main id="main"><article class="container story"><p class="eyebrow"><a href=".." class="back-link">Selected Work</a></p>
+<div class="meta-row"><span>Bloomberg</span><span aria-hidden="true">·</span><span>2015 – 2026</span></div>
+<h1>Redesigning Bloomberg&#x27;s fixed-income benchmark calculation system</h1><p class="lede">A from-scratch redesign of the engine that calculates the fixed-income benchmarks across Bloomberg&#x27;s ecosystem, the project I&#x27;m proudest of, and one I designed end to end.</p>
+<ul class="tag-list" aria-label="Technologies involved"><li>C++</li><li>Python</li><li>SQL</li><li>distributed systems</li><li>Redis</li><li>data validation</li></ul>
+<div class="prose"><h2>The problem</h2>
+<p>Bloomberg's fixed-income benchmark calculations feed a large number of downstream applications — anywhere a client needs to know how a bond or a basket of bonds is behaving relative to a benchmark. The existing calculation system had grown slow enough that it was becoming a real constraint on how the platform could evolve, and every fix had to be made without breaking correctness for the applications already depending on its output.</p>
+<p>This is the part of the job that doesn't show up cleanly in a resume bullet: you're not just optimizing an isolated service, you're changing the engine underneath a system that a lot of other, unrelated software already trusts.</p>
+<h2>Constraints</h2>
+<ul>
+<li><strong>Correctness comes before speed.</strong> A faster benchmark calculation that's occasionally wrong is worse than a slow one that isn't — the output is used directly in financial analysis, so silent errors are the failure mode that matters most.</li>
+<li><strong>Consistency across consumers.</strong> The same benchmark numbers had to stay consistent across every Bloomberg application that reads them, which ruled out a rewrite that only worked for one use case.</li>
+<li><strong>No clean-slate luxury.</strong> The redesign had to happen underneath a live system, not beside it.</li>
+</ul>
+<h2>What I designed</h2>
+<p>The design of this system — the calculation architecture and the validation approach around it — was mine end to end. Two pieces mattered most:</p>
+<ol>
+<li><strong>A redesigned calculation engine</strong>, restructured to remove the bottlenecks that were driving latency, while keeping the same guarantees the rest of the platform depended on.</li>
+<li><strong>A validation and reconciliation framework</strong> that runs alongside the calculations themselves, catching discrepancies before they reach production rather than after a client notices them.</li>
+</ol>
+<div class="flow" role="img" aria-label="Data flows from calculation through validation and reconciliation before reaching downstream Bloomberg applications">
+  <span class="flow-step">raw fixed-income data</span>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <span class="flow-step is-accent">benchmark calculation engine</span>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <span class="flow-step is-accent">validation &amp; reconciliation</span>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <span class="flow-step">downstream Bloomberg applications</span>
+</div>
+<p class="flow-caption">The reconciliation layer isn't a bolt-on — it sits in the critical path and is part of why the redesign is trustworthy enough to ship.</p>
+<h2>The trade-off</h2>
+<p>Building a verification layer alongside the calculation engine is, on paper, extra work that doesn't move the latency number. In practice it's what made the latency work shippable at all: it's much easier to redesign a calculation engine aggressively when you also have an independent system checking its output against expectations. The reconciliation framework effectively bought the confidence needed to be more ambitious with the performance redesign, rather than being a cautious afterthought.</p>
+<div class="stat-callout">
+  <span class="stat-number">85%</span>
+  <span class="stat-label">reduction in processing latency</span>
+</div>
+<div class="stat-callout">
+  <span class="stat-number">15%</span>
+  <span class="stat-label">fewer post-deployment defects, from the reconciliation framework</span>
+</div>
+<h2>Impact</h2>
+<p>The redesign cut processing latency by 85% while improving both scalability and reliability, and the accompanying validation and reconciliation framework reduced post-deployment defects by 15% — protecting the correctness of the analytics consistently across every Bloomberg application consuming that data. It's the project on my record where the architecture, the trade-offs, and the outcome are most fully my own.</p></div></article></main><footer class="site-footer"><div class="container-wide footer-grid">
+<div><p class="footer-name">Octavian Banica</p><p class="footer-tag">Systems engineering — distributed, real-time, financial.</p></div>
+<ul class="footer-links"><li><a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a></li><li><a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a></li><li><a href="../../contact">Get in touch</a></li></ul>
+<p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
+</div></footer>
+<script src="../../home/oai/js/site.js" defer></script></body></html>
