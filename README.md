@@ -1,27 +1,32 @@
-# Octavian Banica — static HTML conversion
+# Octavian Banica — Static HTML Website
 
-Framework-free static conversion of the public `OctavianBanicaUS/OctavianBanicaWeb` site.
+This package is a framework-free static conversion of the Astro source repository.
 
-## Stack
-- HTML5 — one physical `index.html` per route
-- CSS — `css/site.css`
-- JavaScript — `js/site.js`
-- No React, Astro, Node.js runtime, npm dependency, or build step is required.
+## Runtime
+- HTML
+- CSS
+- JavaScript
+- No React
+- No Astro
+- No Node.js/npm required at runtime
 
-## Mobile/accessibility
-The responsive behavior is retained and hardened for phones and tablets:
-- collapsible navigation below 43rem
-- one-column layouts on narrow screens
-- flow diagrams stack instead of overflowing
-- full-width actions on very small screens
-- responsive typography with `clamp()`
-- visible keyboard focus indicators
-- skip-to-content link
-- reduced-motion support
-- viewport metadata on every page
+## Structure
+Each route is a physical HTML document:
+- `/index.html`
+- `/about/index.html`
+- `/career/index.html`
+- `/contact/index.html`
+- `/now/index.html`
+- `/notes/index.html`
+- `/notes/<slug>/index.html`
+- `/work/index.html`
+- `/work/<slug>/index.html`
+- `/404.html`
 
-## Source
+## Visual fidelity
+The CSS is based directly on the source repository's `src/styles/global.css`
+and the page/component styles. The mobile navigation and responsive rules are
+included so the site works on phones and tablets.
+
+## Important
 The original GitHub repository was not modified.
-
-## Asset note
-The source photographs were not altered or approximated. The converted About page references the original public avatar asset directly from GitHub so it remains identical to the source.
