@@ -1,35 +1,95 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
-<title>On unfamiliar hardware, tooling isn&#x27;t overhead — Octavian Banica</title>
-<meta name="description" content="An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could.">
-<link rel="canonical" href="https://octavianbanica.com/notes/tooling-is-not-overhead/">
-<meta property="og:type" content="article"><meta property="og:title" content="On unfamiliar hardware, tooling isn&#x27;t overhead — Octavian Banica">
-<meta property="og:description" content="An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could."><meta property="og:url" content="https://octavianbanica.com/notes/tooling-is-not-overhead/">
-<meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg"><meta property="og:site_name" content="Octavian Banica">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="On unfamiliar hardware, tooling isn&#x27;t overhead — Octavian Banica"><meta name="twitter:description" content="An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could."><meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg">
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+    <title>On unfamiliar hardware, tooling isn&#x27;t overhead — Octavian Banica</title>
+    <meta name="description" content="An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could." />
+    <link rel="canonical" href="https://octavianbanica.com/notes/tooling-is-not-overhead/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="On unfamiliar hardware, tooling isn&#x27;t overhead — Octavian Banica" />
+    <meta property="og:description" content="An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could." />
+    <meta property="og:url" content="https://octavianbanica.com/notes/tooling-is-not-overhead/" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg" />
+    <meta property="og:site_name" content="Octavian Banica" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="On unfamiliar hardware, tooling isn&#x27;t overhead — Octavian Banica" />
+    <meta name="twitter:description" content="An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could." />
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg" />
 
-<link rel="stylesheet" href="../../css/site.css"></head><body>
-<a href="#main" class="skip-link">Skip to content</a><header class="site-header">
-  <div class="bar container-wide">
-    <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
-    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav">
-      <span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span>
-    </button>
-    <nav id="site-nav" class="site-nav" aria-label="Primary"><ul><li><a href="../../work">Selected Work</a></li><li><a href=".." aria-current="page">Systems Notes</a></li><li><a href="../../career">Career</a></li><li><a href="../../about">About</a></li><li><a href="../../now">Now</a></li><li><a href="../../contact">Contact</a></li></ul></nav>
-  </div>
-</header>
-<main id="main"><article class="container story"><p class="eyebrow"><a href=".." class="back-link">Systems Notes</a></p>
-<time class="meta-row" datetime="2026-08-17T00:00:00.000Z">August 2026</time>
-<h1>On unfamiliar hardware, tooling isn&#x27;t overhead</h1><p class="lede">An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could.</p>
-<ul class="tag-list" aria-label="Topics"><li>embedded systems</li><li>tooling</li><li>debugging</li></ul>
-<div class="prose"><p>Two projects, roughly twenty years apart, taught me the same lesson from opposite directions.</p>
-<p>At <a href="../../work/intel-fax-over-ip">Intel, working on Fax-over-IP</a>, the hard part was never really implementing V.17 and V.34 — it was that fax protocol failures don't announce themselves. A handshake that's slightly off doesn't crash; it just occasionally fails in a way that looks like random flakiness unless you have a way to actually observe the protocol state at the moment it goes wrong. So before pushing on modem density, the real leverage was in building diagnostic and validation tooling that could turn "sometimes this doesn't work" into "this specific step, this specific way, this often."</p>
-<p>At <a href="../../work/redline-wireless-security">Redline, building the Point-to-Multipoint wireless system</a>, the constraint was more literal: the processor was custom, so there was no assembler and no debugger for it. Nothing existed to build against. The first real engineering decision on that project wasn't about packet classification or memory management — it was to spend the time building the low-level tooling first, knowing it wouldn't demo as a feature to anyone.</p>
-<p>Both cases share a shape: the visible, fundable work (fax protocol support, a wireless base station) depends entirely on invisible, unglamorous infrastructure (diagnostic tooling, a toolchain) that doesn't show up in what the system does — only in whether you can trust that it does it correctly, or fix it when it doesn't.</p>
-<p>The temptation, especially under time pressure, is to skip straight to the visible work. On unfamiliar or constrained hardware, that's usually a false economy. Every hour not spent building the tools to observe a system honestly gets paid back later, with interest, in the form of debugging sessions with no visibility into what's actually happening.</p></div></article></main><footer class="site-footer"><div class="container-wide footer-grid">
-<div><p class="footer-name">Octavian Banica</p><p class="footer-tag">Systems engineering — distributed, real-time, financial.</p></div>
-<ul class="footer-links"><li><a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a></li><li><a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a></li><li><a href="../../contact">Get in touch</a></li></ul>
-<p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
-</div></footer>
-<script src="../../js/site.js" defer></script></body></html>
+    <link rel="stylesheet" href="../../css/site.css" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <header class="site-header">
+      <div class="bar container-wide">
+        <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
+        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav"><span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span></button>
+        <nav id="site-nav" class="site-nav" aria-label="Primary">
+          <ul>
+            <li><a href="../../work">Selected Work</a></li>
+            <li><a href=".." aria-current="page">Systems Notes</a></li>
+            <li><a href="../../career">Career</a></li>
+            <li><a href="../../about">About</a></li>
+            <li><a href="../../now">Now</a></li>
+            <li><a href="../../contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article class="container story">
+        <p class="eyebrow"><a href=".." class="back-link">Systems Notes</a></p>
+        <time class="meta-row" datetime="2026-08-17T00:00:00.000Z">August 2026</time>
+        <h1>On unfamiliar hardware, tooling isn&#x27;t overhead</h1>
+        <p class="lede">An assembler and debugger for a custom processor. Diagnostic tooling for a fax protocol nobody could see fail. Neither shipped as a feature, and both were the reason anything else could.</p>
+        <ul class="tag-list" aria-label="Topics">
+          <li>embedded systems</li>
+          <li>tooling</li>
+          <li>debugging</li>
+        </ul>
+        <div class="prose">
+          <p>Two projects, roughly twenty years apart, taught me the same lesson from opposite directions.</p>
+          <p>
+            At
+            <a href="../../work/intel-fax-over-ip">Intel, working on Fax-over-IP</a>, the hard part was never really implementing V.17 and V.34 — it was that fax protocol failures don't announce themselves. A handshake that's slightly off doesn't crash; it just occasionally fails in a way that looks like random
+            flakiness unless you have a way to actually observe the protocol state at the moment it goes wrong. So before pushing on modem density, the real leverage was in building diagnostic and validation tooling that could turn "sometimes this doesn't work" into "this specific step, this specific way, this often."
+          </p>
+          <p>
+            At
+            <a href="../../work/redline-wireless-security">Redline, building the Point-to-Multipoint wireless system</a>, the constraint was more literal: the processor was custom, so there was no assembler and no debugger for it. Nothing existed to build against. The first real engineering decision on that project
+            wasn't about packet classification or memory management — it was to spend the time building the low-level tooling first, knowing it wouldn't demo as a feature to anyone.
+          </p>
+          <p>
+            Both cases share a shape: the visible, fundable work (fax protocol support, a wireless base station) depends entirely on invisible, unglamorous infrastructure (diagnostic tooling, a toolchain) that doesn't show up in what the system does — only in whether you can trust that it does it correctly, or fix it
+            when it doesn't.
+          </p>
+          <p>
+            The temptation, especially under time pressure, is to skip straight to the visible work. On unfamiliar or constrained hardware, that's usually a false economy. Every hour not spent building the tools to observe a system honestly gets paid back later, with interest, in the form of debugging sessions with no
+            visibility into what's actually happening.
+          </p>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="container-wide footer-grid">
+        <div>
+          <p class="footer-name">Octavian Banica</p>
+          <p class="footer-tag">Systems engineering — distributed, real-time, financial.</p>
+        </div>
+        <ul class="footer-links">
+          <li>
+            <a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
+          </li>
+          <li><a href="../../contact">Get in touch</a></li>
+        </ul>
+        <p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
+      </div>
+    </footer>
+    <script src="../../js/site.js" defer></script>
+  </body>
+</html>

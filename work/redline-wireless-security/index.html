@@ -1,54 +1,111 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
-<title>Building the tools before you can build the system — Octavian Banica</title>
-<meta name="description" content="High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet.">
-<link rel="canonical" href="https://octavianbanica.com/work/redline-wireless-security/">
-<meta property="og:type" content="article"><meta property="og:title" content="Building the tools before you can build the system — Octavian Banica">
-<meta property="og:description" content="High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet."><meta property="og:url" content="https://octavianbanica.com/work/redline-wireless-security/">
-<meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg"><meta property="og:site_name" content="Octavian Banica">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Building the tools before you can build the system — Octavian Banica"><meta name="twitter:description" content="High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet."><meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg">
-<meta name="article:section" content="Redline Communications">
-<link rel="stylesheet" href="../../css/site.css"></head><body>
-<a href="#main" class="skip-link">Skip to content</a><header class="site-header">
-  <div class="bar container-wide">
-    <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
-    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav">
-      <span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span>
-    </button>
-    <nav id="site-nav" class="site-nav" aria-label="Primary"><ul><li><a href=".." aria-current="page">Selected Work</a></li><li><a href="../../notes">Systems Notes</a></li><li><a href="../../career">Career</a></li><li><a href="../../about">About</a></li><li><a href="../../now">Now</a></li><li><a href="../../contact">Contact</a></li></ul></nav>
-  </div>
-</header>
-<main id="main"><article class="container story"><p class="eyebrow"><a href=".." class="back-link">Selected Work</a></p>
-<div class="meta-row"><span>Redline Communications</span><span aria-hidden="true">·</span><span>2003 – 2010</span></div>
-<h1>Building the tools before you can build the system</h1><p class="lede">High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet.</p>
-<ul class="tag-list" aria-label="Technologies involved"><li>C/C++</li><li>assembler</li><li>cryptography (FIPS)</li><li>embedded systems</li><li>custom processors</li></ul>
-<div class="prose"><h2>The problem</h2>
-<p>Redline built high-throughput fixed-wireless broadband systems — both Point-to-Point and Point-to-Multipoint — running on custom processors designed specifically for that hardware. Point-to-Multipoint is the harder case: one base station has to manage many subscriber connections at once, classify and schedule their traffic, and keep it all secure, on hardware that doesn't have the luxury of an off-the-shelf software ecosystem.</p>
-<h2>Constraints</h2>
-<ul>
-<li><strong>Custom silicon, no existing toolchain.</strong> Standard debugging and development tools don't exist for a processor nobody else has built software for.</li>
-<li><strong>Security requirements were non-negotiable.</strong> The cryptographic and security modules had to be aligned with FIPS requirements — there's no partial credit for "mostly compliant" cryptography.</li>
-<li><strong>Throughput and correctness under contention.</strong> At up to 200 Mbps with many subscribers sharing one base station, memory management and packet classification have direct, measurable consequences for every connected user, not just an abstract benchmark.</li>
-</ul>
-<h2>The decisions</h2>
-<p>Before any of the higher-level system work could happen, the low-level tooling had to exist: I built the assembler and debugger for the custom Point-to-Multipoint processors, because there was nothing to build against otherwise. On top of that foundation, I architected and developed the memory manager and the packet classification system for the high-throughput P2MP platform, and implemented the cryptographic and security modules aligned with FIPS requirements.</p>
-<div class="flow" role="img" aria-label="Build order: custom tooling first, then memory manager and packet classification, then FIPS-aligned security, enabling the production wireless system">
-  <span class="flow-step is-accent">assembler + debugger</span>
-  <span class="flow-arrow" aria-hidden="true">→</span>
-  <span class="flow-step">memory manager + packet classification</span>
-  <span class="flow-arrow" aria-hidden="true">→</span>
-  <span class="flow-step">FIPS-aligned crypto</span>
-  <span class="flow-arrow" aria-hidden="true">→</span>
-  <span class="flow-step">production P2MP wireless system</span>
-</div>
-<p class="flow-caption">The tooling isn't the interesting part of the resume bullet, but it's the part nothing else could be built without.</p>
-<h2>The trade-off</h2>
-<p>Building your own assembler and debugger before you can build the actual product is time spent on infrastructure with no visible feature to show for it. On hardware with no existing toolchain, though, it's not optional — every hour skipped there becomes many more hours of blind debugging later, on a system where correctness in packet classification and memory management directly affects every subscriber sharing the base station.</p>
-<h2>Impact</h2>
-<p>The result was a high-throughput fixed-wireless broadband platform — Point-to-Point and Point-to-Multipoint — supporting data rates up to 200 Mbps in production, with security modules built to FIPS alignment from the start rather than retrofitted after the fact.</p></div></article></main><footer class="site-footer"><div class="container-wide footer-grid">
-<div><p class="footer-name">Octavian Banica</p><p class="footer-tag">Systems engineering — distributed, real-time, financial.</p></div>
-<ul class="footer-links"><li><a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a></li><li><a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a></li><li><a href="../../contact">Get in touch</a></li></ul>
-<p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
-</div></footer>
-<script src="../../js/site.js" defer></script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+    <title>Building the tools before you can build the system — Octavian Banica</title>
+    <meta name="description" content="High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet." />
+    <link rel="canonical" href="https://octavianbanica.com/work/redline-wireless-security/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Building the tools before you can build the system — Octavian Banica" />
+    <meta property="og:description" content="High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet." />
+    <meta property="og:url" content="https://octavianbanica.com/work/redline-wireless-security/" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg" />
+    <meta property="og:site_name" content="Octavian Banica" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Building the tools before you can build the system — Octavian Banica" />
+    <meta name="twitter:description" content="High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet." />
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/OctavianBanicaUS/OctavianBanicaWeb/main/public/images/og-default.jpg" />
+    <meta name="article:section" content="Redline Communications" />
+    <link rel="stylesheet" href="../../css/site.css" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <header class="site-header">
+      <div class="bar container-wide">
+        <a href="index.html" class="wordmark">Octavian Banica<span class="wordmark-role">Senior Systems Engineer</span></a>
+        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav"><span class="visually-hidden">Toggle navigation</span><span class="menu-icon" aria-hidden="true"></span></button>
+        <nav id="site-nav" class="site-nav" aria-label="Primary">
+          <ul>
+            <li><a href=".." aria-current="page">Selected Work</a></li>
+            <li><a href="../../notes">Systems Notes</a></li>
+            <li><a href="../../career">Career</a></li>
+            <li><a href="../../about">About</a></li>
+            <li><a href="../../now">Now</a></li>
+            <li><a href="../../contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <article class="container story">
+        <p class="eyebrow"><a href=".." class="back-link">Selected Work</a></p>
+        <div class="meta-row"><span>Redline Communications</span><span aria-hidden="true">·</span><span>2003 – 2010</span></div>
+        <h1>Building the tools before you can build the system</h1>
+        <p class="lede">High-throughput fixed-wireless broadband on custom Point-to-Multipoint processors — where the first job was building the assembler and debugger, because none existed yet.</p>
+        <ul class="tag-list" aria-label="Technologies involved">
+          <li>C/C++</li>
+          <li>assembler</li>
+          <li>cryptography (FIPS)</li>
+          <li>embedded systems</li>
+          <li>custom processors</li>
+        </ul>
+        <div class="prose">
+          <h2>The problem</h2>
+          <p>
+            Redline built high-throughput fixed-wireless broadband systems — both Point-to-Point and Point-to-Multipoint — running on custom processors designed specifically for that hardware. Point-to-Multipoint is the harder case: one base station has to manage many subscriber connections at once, classify and
+            schedule their traffic, and keep it all secure, on hardware that doesn't have the luxury of an off-the-shelf software ecosystem.
+          </p>
+          <h2>Constraints</h2>
+          <ul>
+            <li><strong>Custom silicon, no existing toolchain.</strong> Standard debugging and development tools don't exist for a processor nobody else has built software for.</li>
+            <li><strong>Security requirements were non-negotiable.</strong> The cryptographic and security modules had to be aligned with FIPS requirements — there's no partial credit for "mostly compliant" cryptography.</li>
+            <li><strong>Throughput and correctness under contention.</strong> At up to 200 Mbps with many subscribers sharing one base station, memory management and packet classification have direct, measurable consequences for every connected user, not just an abstract benchmark.</li>
+          </ul>
+          <h2>The decisions</h2>
+          <p>
+            Before any of the higher-level system work could happen, the low-level tooling had to exist: I built the assembler and debugger for the custom Point-to-Multipoint processors, because there was nothing to build against otherwise. On top of that foundation, I architected and developed the memory manager and
+            the packet classification system for the high-throughput P2MP platform, and implemented the cryptographic and security modules aligned with FIPS requirements.
+          </p>
+          <div class="flow" role="img" aria-label="Build order: custom tooling first, then memory manager and packet classification, then FIPS-aligned security, enabling the production wireless system">
+            <span class="flow-step is-accent">assembler + debugger</span>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <span class="flow-step">memory manager + packet classification</span>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <span class="flow-step">FIPS-aligned crypto</span>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <span class="flow-step">production P2MP wireless system</span>
+          </div>
+          <p class="flow-caption">The tooling isn't the interesting part of the resume bullet, but it's the part nothing else could be built without.</p>
+          <h2>The trade-off</h2>
+          <p>
+            Building your own assembler and debugger before you can build the actual product is time spent on infrastructure with no visible feature to show for it. On hardware with no existing toolchain, though, it's not optional — every hour skipped there becomes many more hours of blind debugging later, on a system
+            where correctness in packet classification and memory management directly affects every subscriber sharing the base station.
+          </p>
+          <h2>Impact</h2>
+          <p>The result was a high-throughput fixed-wireless broadband platform — Point-to-Point and Point-to-Multipoint — supporting data rates up to 200 Mbps in production, with security modules built to FIPS alignment from the start rather than retrofitted after the fact.</p>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="container-wide footer-grid">
+        <div>
+          <p class="footer-name">Octavian Banica</p>
+          <p class="footer-tag">Systems engineering — distributed, real-time, financial.</p>
+        </div>
+        <ul class="footer-links">
+          <li>
+            <a href="mailto:octavian.banica@gmail.com">octavian.banica@gmail.com</a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/octavianbanica/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
+          </li>
+          <li><a href="../../contact">Get in touch</a></li>
+        </ul>
+        <p class="footer-meta">© 2026 Octavian Banica. Built by hand, not templated.</p>
+      </div>
+    </footer>
+    <script src="../../js/site.js" defer></script>
+  </body>
+</html>

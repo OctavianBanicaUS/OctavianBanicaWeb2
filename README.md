@@ -3,6 +3,7 @@
 This package is a framework-free static conversion of the Astro source repository.
 
 ## Runtime
+
 - HTML
 - CSS
 - JavaScript
@@ -11,7 +12,9 @@ This package is a framework-free static conversion of the Astro source repositor
 - No Node.js/npm required at runtime
 
 ## Structure
+
 Each route is a physical HTML document:
+
 - `/index.html`
 - `/about/index.html`
 - `/career/index.html`
@@ -24,9 +27,11 @@ Each route is a physical HTML document:
 - `/404.html`
 
 ## Visual fidelity
+
 The CSS is based directly on the source repository's `src/styles/global.css`
 and the page/component styles. The mobile navigation and responsive rules are
 included so the site works on phones and tablets.
 
 ## Important
+
 The original GitHub repository was not modified.
